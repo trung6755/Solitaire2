@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using DG.Tweening;
 
 public class UserInput : MonoBehaviour
 {
@@ -246,7 +247,7 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
-    void Stack(GameObject selected)
+    void Stack(GameObject selected, bool playAnimation = false)
     {
         // if on top of king or empty bottom stack the cards in place
         // else stack the cards with a negative y offset
@@ -254,6 +255,17 @@ public class UserInput : MonoBehaviour
         Selectable s1 = slot1.GetComponent<Selectable>();
         Selectable s2 = selected.GetComponent<Selectable>();
         float yOffset = 0.3f;
+
+        if (playAnimation)
+        {
+            transform.DOMove(new Vector3(1, 1, 1), 1).OnComplete(() =>
+            {
+                if (s1.suit == s2.suit && s1.value == s2.value + 1)
+                {
+                    s1.transform.position = s2.transform.position;
+                }
+            });
+        }
 
         if (s2.top || (!s2.top && s1.value == 13))
         {
@@ -271,6 +283,7 @@ public class UserInput : MonoBehaviour
         {
             solitaire.topPos[s1.row].GetComponent<Selectable>().value = 0;
             solitaire.topPos[s1.row].GetComponent<Selectable>().suit = null;
+            playAnimation = true;
         }
         else if (s1.top) // keeps track of the current value of the top decks as a card has been removed
         {
@@ -289,6 +302,7 @@ public class UserInput : MonoBehaviour
             solitaire.topPos[s1.row].GetComponent<Selectable>().value = s1.value;
             solitaire.topPos[s1.row].GetComponent<Selectable>().suit = s1.suit;
             s1.top = true;
+            playAnimation = true;
         }
         else
         {
@@ -298,6 +312,7 @@ public class UserInput : MonoBehaviour
         // after completing move reset slot1 to be essentially null as being null will break the logic
         slot1 = this.gameObject;
 
+        
     }
 
     bool Blocked(GameObject selected)
@@ -351,7 +366,7 @@ public class UserInput : MonoBehaviour
                 if (solitaire.topPos[i].GetComponent<Selectable>().value == 0) // and the top position is empty
                 {
                     slot1 = selected;
-                    Stack(stack.gameObject); // stack the ace up top
+                    Stack(stack.gameObject); // stack the ace up top                   
                     break;                  // in the first empty position found
                 }
             }

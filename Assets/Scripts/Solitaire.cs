@@ -59,10 +59,10 @@ public class Solitaire : MonoBehaviour
         Shuffle(deck);
 
         //test the cards in the deck:
-        foreach (string card in deck)
-        {
-            print(card);
-        }
+        //foreach (string card in deck)
+        //{
+        //    print(card);
+        //}
         SolitaireSort();
         StartCoroutine(SolitaireDeal());
         SortDeckIntoTrips();
