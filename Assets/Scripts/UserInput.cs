@@ -271,8 +271,12 @@ public class UserInput : MonoBehaviour
         {
             yOffset = 0;
         }
-
-        slot1.transform.position = new Vector3(selected.transform.position.x, selected.transform.position.y - yOffset, selected.transform.position.z - 0.01f);
+        
+        var newPos = new Vector3(selected.transform.position.x, 
+            selected.transform.position.y - yOffset,
+            selected.transform.position.z - 2);
+        slot1.transform.DOMove(newPos, 0.25f);
+        //slot1.transform.position
         slot1.transform.parent = selected.transform; // this makes the children move with the parents
 
         if (s1.inDeckPile) // removes the cards from the top pile to prevent duplicate cards
